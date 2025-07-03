@@ -1,0 +1,43 @@
+# Entorno virtual (Windows)
+venv/
+ENV/
+env/
+
+# Archivos de configuración de entorno
+.env
+
+# Archivos de base de datos de Django (SQLite por defecto)
+*.sqlite3
+
+# Archivos temporales de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos generados por logs
+*.log
+
+# Archivos de compilación
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Archivos de caché de Django
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+
+# Archivos de migración (si tuvieras modelos Django en apps futuras)
+*/migrations/
+*/__pycache__/
+
+# Configuración del editor
+.vscode/
+.idea/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
