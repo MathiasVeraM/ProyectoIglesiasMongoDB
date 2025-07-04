@@ -21,3 +21,6 @@ def actualizar(id, data):
 
 def eliminar(id):
     return personas.delete_one({'_id': ObjectId(id)})
+
+def obtener_por_id_persona(id_persona):
+    return personas.find_one({'ID_Persona': id_persona})

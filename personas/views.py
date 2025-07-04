@@ -104,7 +104,7 @@ def detalle_persona(request, id):
             persona['Catequizado']['Nombre_Parroquia'] = parroquia['Nombre_Parroquia']
 
         id_repr = persona['Catequizado'].get('ID_Representante')
-        representante = persona_services.obtener_por_id(id_repr)
+        representante = persona_services.obtener_por_id_persona(id_repr)
         if representante:
             persona['Catequizado']['Nombre_Representante'] = f"{representante['Nombre_Persona']} {representante['Apellido_Persona']}"
 

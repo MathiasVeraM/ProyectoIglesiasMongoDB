@@ -26,11 +26,11 @@
                 <strong>Representante:</strong> {{ persona.Catequizado.Nombre_Representante }}
             </p>
         {% elif persona.Catequista %}
-            <hr>
-            <h6>Información de Catequista</h6>
-            <p>
-                <strong>ID Parroquia:</strong> {{ persona.Catequista.ID_Parroquia }}
-            </p>
+    <hr>
+    <h6>Información de Catequista</h6>
+    <p>
+        <strong>Parroquia:</strong> {{ persona.Catequista.Nombre_Parroquia }}
+    </p>
         {% elif persona.Representante %}
             <hr>
             <h6>Información de Representante</h6>
