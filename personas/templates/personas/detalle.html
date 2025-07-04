@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle de Persona{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Detalle de Persona</h1>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">{{ persona.Nombre_Persona }} {{ persona.Apellido_Persona }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">ID: {{ persona.ID_Persona }}</h6>
+        <p class="card-text">
+            <strong>Teléfono:</strong> {{ persona.Telefono_Persona }}<br>
+            <strong>Email:</strong> {{ persona.Email_Persona }}<br>
+            <strong>Tipo:</strong> {{ persona.Tipo_Persona }}
+        </p>
+
+        {% if persona.Catequizado %}
+            <hr>
+            <h6>Información de Catequizado</h6>
+            <p>
+                <strong>Fecha de Nacimiento:</strong> {{ persona.Catequizado.Fecha_Nacimiento_Catequizado|date:"Y-m-d" }}<br>
+                <strong>Sexo:</strong> {{ persona.Catequizado.Sexo_Catequizado }}<br>
+                <strong>Dirección:</strong> {{ persona.Catequizado.Direccion_Catequizado }}<br>
+                <strong>Bautizado:</strong> {{ persona.Catequizado.Catequizado_Bautizado|yesno:"Sí,No" }}<br>
+                <strong>ID Parroquia:</strong> {{ persona.Catequizado.ID_Parroquia }}<br>
+                <strong>ID Representante:</strong> {{ persona.Catequizado.ID_Representante }}
+            </p>
+        {% elif persona.Catequista %}
+            <hr>
+            <h6>Información de Catequista</h6>
+            <p>
+                <strong>ID Parroquia:</strong> {{ persona.Catequista.ID_Parroquia }}
+            </p>
+        {% elif persona.Representante %}
+            <hr>
+            <h6>Información de Representante</h6>
+            <p>No se requiere información adicional.</p>
+        {% endif %}
+
+        <a href="/personas/editar/{{ persona.id_str }}/" class="btn btn-warning">Editar</a>
+        <a href="/personas/" class="btn btn-secondary">Volver</a>
+    </div>
+</div>
+{% endblock %}

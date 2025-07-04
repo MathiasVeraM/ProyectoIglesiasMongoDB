@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Personas Registradas{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Personas registradas</h1>
+<a href="/personas/crear/" class="btn btn-primary mb-4">+ Nueva Persona</a>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+  {% for persona in personas %}
+  <div class="col">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body">
+        <h5 class="card-title">{{ persona.Nombre_Persona }} {{ persona.Apellido_Persona }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">ID: {{ persona.ID_Persona }}</h6>
+        <p class="card-text">
+          <strong>Teléfono:</strong> {{ persona.Telefono_Persona }}<br />
+          <strong>Email:</strong> {{ persona.Email_Persona }}<br />
+          <strong>Tipo:</strong> {{ persona.Tipo_Persona }}
+        </p>
+        <div class="d-flex justify-content-between">
+          <a href="/personas/editar/{{ persona.id_str }}/" class="btn btn-outline-warning btn-sm">Editar</a>
+          <a href="/personas/detalle/{{ persona.id_str }}/" class="btn btn-outline-info btn-sm">Ver Detalle</a>
+          <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmModal" data-id="{{ persona.id_str }}" data-nombre="{{ persona.Nombre_Persona }} {{ persona.Apellido_Persona }}">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p class="text-center">No hay personas registradas aún.</p>
+  {% endfor %}
+</div>
+
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content rounded-3 shadow">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="confirmModalLabel">Confirmar eliminación</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que deseas eliminar a <strong id="personaNombre"></strong>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <a href="#" class="btn btn-danger" id="confirmDeleteBtn">Sí, eliminar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const confirmModal = document.getElementById("confirmModal");
+  confirmModal.addEventListener("show.bs.modal", function (event) {
+    const button = event.relatedTarget;
+    const id = button.getAttribute("data-id");
+    const nombre = button.getAttribute("data-nombre");
+    document.getElementById("personaNombre").textContent = nombre;
+    document.getElementById("confirmDeleteBtn").href = `/personas/eliminar/${id}/`;
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}{% if persona %}Editar{% else %}Registrar{% endif %} Persona{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">{% if persona %}Editar{% else %}Registrar{% endif %} Persona</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre:</label>
+        <input type="text" name="Nombre_Persona" id="nombre" class="form-control" value="{{ persona.Nombre_Persona|default:'' }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="apellido" class="form-label">Apellido:</label>
+        <input type="text" name="Apellido_Persona" id="apellido" class="form-control" value="{{ persona.Apellido_Persona|default:'' }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="telefono" class="form-label">Teléfono:</label>
+        <input type="text" name="Telefono_Persona" id="telefono" class="form-control" value="{{ persona.Telefono_Persona|default:'' }}">
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" name="Email_Persona" id="email" class="form-control" value="{{ persona.Email_Persona|default:'' }}">
+    </div>
+
+    <div class="mb-3">
+        <label for="tipo" class="form-label">Tipo de Persona:</label>
+        <select name="Tipo_Persona" id="tipo" class="form-select" required>
+            <option value="">Seleccione...</option>
+            <option value="Catequizado" {% if persona.Tipo_Persona == 'Catequizado' %}selected{% endif %}>Catequizado</option>
+            <option value="Catequista" {% if persona.Tipo_Persona == 'Catequista' %}selected{% endif %}>Catequista</option>
+            <option value="Representante" {% if persona.Tipo_Persona == 'Representante' %}selected{% endif %}>Representante</option>
+        </select>
+    </div>
+
+    <div id="campos-adicionales"></div>
+
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a href="/personas/" class="btn btn-secondary">Cancelar</a>
+</form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const tipo = document.getElementById("tipo");
+    const campos = document.getElementById("campos-adicionales");
+    const parroquias = {{ parroquias|safe }};
+    const representantes = {{ representantes|safe }};
+
+    function renderParroquiasSelect(name) {
+      let html = `<div class="mb-3">
+          <label for="${name}" class="form-label">Parroquia:</label>
+          <select name="${name}" id="${name}" class="form-select">
+              <option value="">Seleccione...</option>`;
+      parroquias.forEach(p => {
+        html += `<option value="${p.ID_Parroquia}">${p.Nombre_Parroquia}</option>`;
+      });
+      html += `</select></div>`;
+      return html;
+    }
+
+    function renderRepresentantesSelect() {
+      let html = `<div class="mb-3">
+          <label for="ID_Representante" class="form-label">Representante:</label>
+          <select name="ID_Representante" id="ID_Representante" class="form-select">
+              <option value="">Seleccione...</option>`;
+      representantes.forEach(r => {
+        html += `<option value="${r.ID_Persona}">${r.Nombre_Persona} ${r.Apellido_Persona}</option>`;
+      });
+      html += `</select></div>`;
+      return html;
+    }
+
+    function renderCamposAdicionales(valor) {
+      campos.innerHTML = "";
+      if (valor === "Catequizado") {
+        campos.innerHTML = `
+          <div class="mb-3">
+              <label for="fecha_nac" class="form-label">Fecha de Nacimiento:</label>
+              <input type="date" name="Fecha_Nacimiento_Catequizado" id="fecha_nac" class="form-control">
+          </div>
+          <div class="mb-3">
+              <label for="sexo" class="form-label">Sexo:</label>
+              <select name="Sexo_Catequizado" id="sexo" class="form-select">
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
+              </select>
+          </div>
+          <div class="mb-3">
+              <label for="direccion_catequizado" class="form-label">Dirección:</label>
+              <input type="text" name="Direccion_Catequizado" id="direccion_catequizado" class="form-control">
+          </div>
+          <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" name="Catequizado_Bautizado" id="bautizado">
+              <label class="form-check-label" for="bautizado">¿Está bautizado?</label>
+          </div>
+        ` + renderParroquiasSelect("ID_Parroquia") + renderRepresentantesSelect();
+
+      } else if (valor === "Catequista") {
+        campos.innerHTML = renderParroquiasSelect("ID_Parroquia");
+      }
+    }
+
+    tipo.addEventListener("change", (e) => {
+      renderCamposAdicionales(e.target.value);
+    });
+
+    if (tipo.value) renderCamposAdicionales(tipo.value);
+  });
+</script>
+
+{% endblock %}
