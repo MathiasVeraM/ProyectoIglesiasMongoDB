@@ -22,8 +22,8 @@
                 <strong>Sexo:</strong> {{ persona.Catequizado.Sexo_Catequizado }}<br>
                 <strong>Dirección:</strong> {{ persona.Catequizado.Direccion_Catequizado }}<br>
                 <strong>Bautizado:</strong> {{ persona.Catequizado.Catequizado_Bautizado|yesno:"Sí,No" }}<br>
-                <strong>ID Parroquia:</strong> {{ persona.Catequizado.ID_Parroquia }}<br>
-                <strong>ID Representante:</strong> {{ persona.Catequizado.ID_Representante }}
+                <strong>Parroquia:</strong> {{ persona.Catequizado.Nombre_Parroquia }}<br>
+                <strong>Representante:</strong> {{ persona.Catequizado.Nombre_Representante }}
             </p>
         {% elif persona.Catequista %}
             <hr>

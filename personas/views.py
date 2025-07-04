@@ -50,6 +50,7 @@ def crear_persona(request):
 
 def editar_persona(request, id):
     persona = persona_services.obtener_por_id(id)
+
     if request.method == 'POST':
         tipo = request.POST['Tipo_Persona']
         data = {
@@ -60,7 +61,6 @@ def editar_persona(request, id):
             'Tipo_Persona': tipo
         }
 
-        # Subdocumento según tipo
         if tipo == 'Catequizado':
             data['Catequizado'] = {
                 'Fecha_Nacimiento_Catequizado': request.POST['Fecha_Nacimiento_Catequizado'],
@@ -79,7 +79,15 @@ def editar_persona(request, id):
 
         persona_services.actualizar(id, data)
         return redirect('/personas/')
-    return render(request, 'personas/formulario.html', {'persona': persona})
+
+    parroquias = list(parroquia_services.obtener_todas())
+    representantes = [r for r in persona_services.obtener_todos() if r['Tipo_Persona'] == 'Representante']
+
+    return render(request, 'personas/formulario.html', {
+        'persona': persona,
+        'parroquias': json.dumps(parroquias, default=str),
+        'representantes': json.dumps(representantes, default=str)
+    })
 
 def eliminar_persona(request, id):
     persona_services.eliminar(id)
@@ -87,5 +95,24 @@ def eliminar_persona(request, id):
 
 def detalle_persona(request, id):
     persona = persona_services.obtener_por_id(id)
-    persona['id_str'] = str(persona['_id'])  # por si se necesita en el template
+
+    # Agrega nombre de parroquia si existe
+    if persona.get('Catequizado'):
+        id_parroquia = persona['Catequizado'].get('ID_Parroquia')
+        parroquia = parroquia_services.obtener_por_id(id_parroquia)
+        if parroquia:
+            persona['Catequizado']['Nombre_Parroquia'] = parroquia['Nombre_Parroquia']
+
+        id_repr = persona['Catequizado'].get('ID_Representante')
+        representante = persona_services.obtener_por_id(id_repr)
+        if representante:
+            persona['Catequizado']['Nombre_Representante'] = f"{representante['Nombre_Persona']} {representante['Apellido_Persona']}"
+
+    if persona.get('Catequista'):
+        id_parroquia = persona['Catequista'].get('ID_Parroquia')
+        parroquia = parroquia_services.obtener_por_id(id_parroquia)
+        if parroquia:
+            persona['Catequista']['Nombre_Parroquia'] = parroquia['Nombre_Parroquia']
+
+    persona['id_str'] = str(persona['_id'])
     return render(request, 'personas/detalle.html', {'persona': persona})
